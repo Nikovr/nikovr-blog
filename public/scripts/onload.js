@@ -16,5 +16,5 @@ function calcTime(startTime) {
     var endTime = new Date().getTime();
     var loadTime = endTime - startTime;
     var element = document.getElementById('loadtime');
-    element.innerText = `Load Time is ${loadTime.toString()} ms`;
+    element.innerText = `Client Load Time is ${loadTime.toString()} ms`;
 }
