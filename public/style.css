@@ -224,6 +224,29 @@
     font-size: 1.2em;
 }
 
+.login-field {
+    width: 10%;
+    height: 50%;
+    margin-top: 1em;
+    margin-right: 1em;
+    min-width: 15em;
+    padding: 0.5em;
+    font-family: Georgia;
+    font-size: 1.2em;
+}
+
+.login-button {
+    width: 10%;
+    height: 50%;
+    margin-top: 1em;
+    margin-right: 1em;
+    min-width: 15em;
+    padding: 0.5em;
+    border: thick solid #440060;
+    font-family: Georgia;
+    font-size: 1.2em;
+}
+
 a {
     color: #000;
     color: inherit;

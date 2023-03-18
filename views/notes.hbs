@@ -1,0 +1,24 @@
+<body onload="LoadNotes()" class="bg-primary">
+        {{>header}}
+        <main class="color-primary">
+            <secition>
+                <h2 class="heading">Здесь вы можете написать заметку</h2>
+                <div class="main bg-additional">
+                    <form onsubmit="CreateNote();return false">
+                        <div class="vertical">
+                            <input type="text" id="text_id" class="textfield bg-primary">
+                            <input type="submit" class="button bg-secondary color-secondary" value="Добавить заметку">
+                        </div>
+                    </form>
+                </div>
+            </secition>
+            <section>
+                <h2 class="heading">Ваши заметки:</h2>
+                <div id="parent_notes">
+                    <div id="start_notes"></div>
+                </div>
+            </section>
+            {{>cowpic}}
+        </main>
+        {{>footer}}
+</body>
