@@ -3,6 +3,9 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import * as hbs from 'express-handlebars';
 import { join } from 'path';
 import { AppModule } from './app.module';
+import { SwaggerModule, DocumentBuilder, SwaggerDocumentOptions } from "@nestjs/swagger";
+import { UserModule } from './user/user.module';
+import { CommentModule } from './comment/comment.module';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -21,6 +24,25 @@ async function bootstrap() {
   );
 
   app.setViewEngine('hbs')
+
+  const config = new DocumentBuilder()
+    .setTitle('Personal Blog API')
+    .setDescription('documentation for API used in this project')
+    .setVersion('1.0')
+    .addTag('nikovr')
+    .build();
+
+  const options: SwaggerDocumentOptions =  {
+    operationIdFactory: (
+      controllerKey: string,
+      methodKey: string
+    ) => methodKey,
+    include: [UserModule, CommentModule],
+  };
+
+
+  const document = SwaggerModule.createDocument(app, config, options);
+  SwaggerModule.setup('api', app, document);
 
   let port = process.env.PORT;
   if (port === undefined || isNaN(+port)) {
