@@ -1,18 +1,19 @@
-import { Get, Post, Delete, Param, Controller } from '@nestjs/common';
+import { Get, Post, Delete, Param, Controller, Body } from "@nestjs/common";
 import { CommentService } from './comment.service';
-import { CommentRO } from './interfaces/comment.interface';
-import { Comment } from './comment.decorator';
+import { Comment } from '@prisma/client'
 
 import {
   ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags
 } from '@nestjs/swagger';
+import { CreateCommentDto } from './dto/comment.dto';
 
 @ApiBearerAuth()
 @ApiTags('comments')
 @Controller('comments')
 export class CommentController {
 
-  constructor(private readonly commentService: CommentService) {}
+  constructor(
+    private readonly commentService: CommentService) {}
 
   @ApiOperation({
     summary: 'Find a comment from the forum by id'
@@ -26,15 +27,30 @@ export class CommentController {
     description: 'Not found: comment has not been found'
   })
   @Get(':commentId')
-  async getComment(@Comment('id') commentId: number, @Param('commentId') id: number): Promise<CommentRO> {
-    return await this.commentService.findComment(commentId, id);
+  async getComment(@Param('commentId') id: string): Promise<Comment> {
+    return await this.commentService.findComment(id);
+  }
+
+  @ApiOperation({
+    summary: 'Find all comments from the forum'
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Success: comments have been found'
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Not found: comments have not been found'
+  })
+  @Get('')
+  async getComments(): Promise<Comment[]> {
+    return await this.commentService.findComments();
   }
 
 
   @ApiOperation({
     summary: 'Post a comment to the forum'
   })
-  @ApiParam({ name: 'text', type: 'string' })
   @ApiResponse({
     status: 201,
     description: 'Success: comment has been posted to the forum.'
@@ -47,9 +63,9 @@ export class CommentController {
     status: 401,
     description: 'Unauthorized: you need to authorize to post a comment.'
   })
-  @Post(':text/create')
-  async create(@Comment('id') commentId: number, @Param('text') text: string): Promise<CommentRO> {
-    return await this.commentService.createComment(commentId, text);
+  @Post(':text')
+  async create(@Body() data: CreateCommentDto): Promise<Comment> {
+    return await this.commentService.createComment(data);
   }
 
   @ApiOperation({
@@ -72,9 +88,9 @@ export class CommentController {
     status: 401,
     description: 'Unauthorized: you need to authorize to delete a comment.'
   })
-  @Delete(':commentId/delete')
-  async delete(@Comment('id') commentId: number, @Param('commentId') id: number): Promise<CommentRO> {
-    return await this.commentService.deleteComment(commentId, id);
+  @Delete(':commentId')
+  async delete(@Param('commentId') id: string) {
+    await this.commentService.deleteComment(id);
   }
 
 }

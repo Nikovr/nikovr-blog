@@ -1,22 +1,26 @@
-<body onload="LoadNotes()" class="bg-primary">
+<body onload="LoadComments()" class="bg-primary">
         {{>header}}
         <main class="color-primary">
+          {{>session}}
             <secition>
-                <h2 class="heading">Здесь вы можете написать заметку</h2>
+                <h2 class="heading">Здесь вы можете оставить комментарий</h2>
                 <div class="main bg-additional">
-                    <form onsubmit="CreateNote();return false">
+                    <form action="/comments" method="post">
                         <div class="vertical">
-                            <input type="text" id="text_id" class="textfield bg-primary">
-                            <input type="submit" class="button bg-secondary color-secondary" value="Добавить заметку">
+                            <input name="sumbitted" type="text" id="text_id" class="textfield bg-primary">
+                            <input type="submit" class="button bg-secondary color-secondary" value="Добавить комментарий">
                         </div>
                     </form>
                 </div>
             </secition>
             <section>
-                <h2 class="heading">Ваши заметки:</h2>
-                <div id="parent_notes">
-                    <div id="start_notes"></div>
-                </div>
+                <h2 class="heading">Комментарии:</h2>
+                {{#each comments}}
+                  <div class="main bg-additional">
+                    <h2>{{this.authorName}}</h2>
+                    <p>{{this.content}}</p>
+                  </div>
+                {{/each}}
             </section>
             {{>cowpic}}
         </main>

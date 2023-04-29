@@ -14,12 +14,8 @@ function CreateNote() {
     localStorage.setItem("notes", JSON.stringify(storedNotes));
 }
 
-function LoadNotes() {
-    var storedNotes = JSON.parse(localStorage.getItem("notes"));
-    if (storedNotes != null) 
-    {
-        storedNotes.forEach(LoadNote);
-    }
+function LoadComments() {
+    return 0;
 }
 
 function LoadNote(note) {

@@ -1,11 +1,11 @@
-import { Get, Post, Delete, Param, Controller } from '@nestjs/common';
+import { Get, Post, Delete, Param, Controller, Body } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserRO } from './interfaces/user.interface';
-import { User } from './user.decorator';
+import { User } from '@prisma/client'
 
 import {
   ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags
 } from '@nestjs/swagger';
+import { CreateUserDto } from './dto/user.dto';
 
 @ApiBearerAuth()
 @ApiTags('users')
@@ -29,15 +29,14 @@ export class UserController {
     status: 403,
     description: 'Forbidden: you do not have the rights to search for users.'
   })
-  @Get(':username')
-  async getUser(@User('id') userId: number, @Param('username') username: string): Promise<UserRO> {
-    return await this.userService.findUser(userId, username);
+  @Get(':userId')
+  async getUser(@Param('userId') id: string): Promise<User> {
+    return await this.userService.findUser(id);
   }
 
   @ApiOperation({
     summary: 'Create a user'
   })
-  @ApiParam({ name: 'username', type: 'string' })
   @ApiResponse({
     status: 201,
     description: 'Success: user has been created.'
@@ -46,9 +45,9 @@ export class UserController {
     status: 403,
     description: 'Forbidden: you do not have the rights to create users.'
   })
-  @Post(':username/create')
-  async create(@User('id') userId: number, @Param('username') username: string): Promise<UserRO> {
-    return await this.userService.createUser(userId, username);
+  @Post(':username')
+  async create(@Body() data: CreateUserDto): Promise<User> {
+    return await this.userService.createUser(data);
   }
 
 
@@ -67,9 +66,9 @@ export class UserController {
     status: 403,
     description: 'Forbidden: you do not have the rights to delete users.'
   })
-  @Delete(':userId/delete')
-  async delete(@User('id') userId: number,  @Param('userId') id: number): Promise<UserRO> {
-    return await this.userService.deleteUser(userId, id);
+  @Delete(':userId')
+  async delete(@Param('userId') id: string) {
+    return await this.userService.deleteUser(id);
   }
 
 }

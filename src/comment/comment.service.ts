@@ -1,19 +1,24 @@
-import { Injectable, NotImplementedException } from '@nestjs/common';
-import { CommentRO } from './interfaces/comment.interface';
+import { Injectable } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+import { Comment } from '@prisma/client';
+import { CreateCommentDto} from './dto/comment.dto';
 @Injectable()
 export class CommentService {
-  async findComment(id: number, username: number):
-    Promise<CommentRO> {
-    throw new NotImplementedException();
+  constructor(private readonly prisma: PrismaClient) {}
+  async findComment(id: string): Promise<Comment> {
+    return this.prisma.comment.findFirst({
+      where: { id: parseInt(id) }
+    });}
+  async findComments(): Promise<Comment[]> {
+    return this.prisma.comment.findMany();
   }
 
-  async createComment(id: number, username: string):
-    Promise<CommentRO> {
-    throw new NotImplementedException();
+  async createComment(data: CreateCommentDto): Promise<Comment> {
+    data.authorId = 1; // no authorization so always anon
+    return this.prisma.comment.create({ data });
   }
 
-  async deleteComment(id: number, username: number):
-    Promise<CommentRO> {
-    throw new NotImplementedException();
+  async deleteComment(id: string){
+    await this.prisma.comment.delete({ where: { id: parseInt(id) } });
   }
 }
